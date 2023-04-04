@@ -1,19 +1,15 @@
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [username, setUsername] = useState("");
-    // const navigate = useNavigate();
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         localStorage.setItem("_username", username);
         //👇🏻 Navigates to the application
-        // navigate("/app");
-        router.push("/main")
-
+        navigate("/app");
     };
     return (
         <div className='home'>
