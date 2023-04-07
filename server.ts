@@ -4,6 +4,7 @@ const { createServer } = require('http')
 const { Server } = require("socket.io");
 const app = express();
 const port = 4000;
+const connect = require('./db').connect;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,7 +19,9 @@ const io = new Server(httpServer, {
 
 let todoList: any[] = [];
 
-io.on('connection', (socket: any) => {
+io.on('connection', async (socket: any) => {
+  const db = await connect();
+  const list = db.collection('list');
   console.log('⚡: a user connected');
 
   socket.on('message', (message: any) => {
@@ -28,6 +31,8 @@ io.on('connection', (socket: any) => {
   socket.on("addTodo", (todo: any) => {
     //👇🏻 todo - contains the object from the React app
     console.log(todo);
+    
+    list.insertOne(todo);
     //👇🏻 Adds the to-do object to the list of to-dos
     todoList.unshift(todo);
     //👇🏻 Sends all the to-dos to the React app
